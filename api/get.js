@@ -17,7 +17,7 @@ module.exports = async (req, res) => {
   }
   
   // 移除/get前缀，拼接TMDB原始路径
-  requestUrl = requestUrl.replace(/^\/get/, '');
+  requestUrl = requestUrl.替换(/^\/get/, '');
   
   // 拼接api_key参数（核心逻辑）
   if (parsedUrl.query === null) {
