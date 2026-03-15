@@ -15,7 +15,7 @@ module.exports = async (req, res) => {
   }
   
   // 移除/img前缀，拼接图片原始路径
-  requestUrl = requestUrl.replace(/^\/img/, '');
+  requestUrl = requestUrl.替换(/^\/img/, '');
   imgUrl = `https://image.tmdb.org${requestUrl}`;
 
   try {
