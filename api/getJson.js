@@ -1,38 +1,39 @@
-var tmdbUrl = "https://api.themoviedb.org"
-const http = require('http');
+// TMDB_API_Vercel/api/get.js
+var tmdbUrl = "https://api.themoviedb.org";
 const axios = require('axios');
 const url = require('url');
-const common = require('../utility/common.js')
+// 修正路径：从项目根目录的utility引入（../../../ 改成 ../）
+const common = require('../utility/common.js');
 
 module.exports = async (req, res) => {
-  var { url: requestUrl} = req;
+  var { url: requestUrl } = req;
   const parsedUrl = url.parse(requestUrl);
-  // 重定向的`/get`必须去除
+
+  // 只处理/get开头的请求
   if (!requestUrl.startsWith("/get")) {
+    res.statusCode = 404;
+    res.end("Invalid path");
     return;
-  }else{
-    requestUrl = requestUrl.replace(/^\/get/, '');
   }
-  // 如果`api_key`前面存在参数，则`api_key`前面是'&'，否则前面就是是'?'
-  if(parsedUrl.query===null){
+  
+  // 移除/get前缀，拼接TMDB原始路径
+  requestUrl = requestUrl.replace(/^\/get/, '');
+  
+  // 拼接api_key参数（核心逻辑）
+  if (parsedUrl.query === null) {
     tmdbUrl = `https://api.themoviedb.org/3${requestUrl}?api_key=${common.apiKey}`;
-  }else {
+  } else {
     tmdbUrl = `https://api.themoviedb.org/3${requestUrl}&api_key=${common.apiKey}`;
   }
 
   try {
-    // 发送 HTTP 请求以获取 TMDb API 的响应
     const response = await axios.get(tmdbUrl);
-    // 将 TMDb API 的响应返回给调用方
     res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');
     res.end(JSON.stringify(response.data));
-    console.log(tmdbUrl)
-  }catch (error) {
-    // 处理错误情况
+  } catch (error) {
     res.statusCode = 500;
     res.setHeader('Content-Type', 'text/plain');
-    res.end(`${error}`);
-    console.log(`${tmdbUrl}`);
+    res.end(`Error: ${error.message}\nTMDB URL: ${tmdbUrl}`);
   }
 };
