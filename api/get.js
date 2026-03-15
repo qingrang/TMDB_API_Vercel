@@ -2,7 +2,7 @@
 var tmdbUrl = "https://api.themoviedb.org";
 const axios = require('axios');
 const url = require('url');
-// 修正路径：从项目根目录的utility引入（../../../ 改成 ../）
+// 修正路径：从项目根目录的utility引入
 const common = require('../utility/common.js');
 
 module.exports = async (req, res) => {
@@ -16,8 +16,8 @@ module.exports = async (req, res) => {
     return;
   }
   
-  // 移除/get前缀，拼接TMDB原始路径
-  requestUrl = requestUrl.替换(/^\/get/, '');
+  // 移除/get前缀，拼接TMDB原始路径（修正：替换 → replace）
+  requestUrl = requestUrl.replace(/^\/get/, '');
   
   // 拼接api_key参数（核心逻辑）
   if (parsedUrl.query === null) {
